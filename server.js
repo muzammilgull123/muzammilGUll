@@ -2,7 +2,10 @@ const express = require('express');
 const app = express();
 const axios = require('axios');
 const dotenv = require('dotenv');
-const { registerwebHook, registerWebhook } = require('./webhook/rejisterWebHook');
+const { registerWebhook } = require('./webhook/registerwebhook');
+
+
+
 
 dotenv.config();
 app.use(express.json());
@@ -15,6 +18,7 @@ app.get('/', (req, res) => {
 
 app.get('/login/github',(req, res) => {
   const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`;
+
   res.redirect(redirectUrl);
 });
 
@@ -27,16 +31,21 @@ app.get('/github/callback', async (req, res) => {
         client_id: process.env.GITHUB_APP_CLIENT_ID,
         client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
         code: code,
+        scope: 'repo admin:repo_hook',
       },
       headers: {
         accept: 'application/json',
       },
     });
-    const repoFullName = 'muzammilgull123/muzammilGUll';
+   
     const webhookUrl = 'https://48f8-39-51-69-114.ngrok-free.app/webhook/github';
+   const owner = 'muzammilgull123';
+    const repo='muzammilGUll';
+   
     
     const access_token = response.data.access_token;
-      console.log(access_token)
+      console.log(access_token);
+   registerWebhook(owner,repo,webhookUrl)
   
 
     res.send('GitHub authentication successful!');
@@ -52,6 +61,7 @@ app.post('/webhook/github', (req, res) => {
   const payload = req.body;
 
   // Handle GitHub webhook event
+  console.log(req.body);
 
   res.send('GitHub webhook received!');
 });
