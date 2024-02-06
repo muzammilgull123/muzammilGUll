@@ -3,6 +3,8 @@ const app = express();
 const axios = require('axios');
 const dotenv = require('dotenv');
 const { registerWebhook } = require('./webhook/registerwebhook');
+const { getPersnalAccessToken } = require('./webhook/persnalAccessToken');
+const createPersonalAccessToken = require('./webhook/persnalAccessToken');
 
 
 
@@ -31,20 +33,22 @@ app.get('/github/callback', async (req, res) => {
         client_id: process.env.GITHUB_APP_CLIENT_ID,
         client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
         code: code,
-        scope: 'repo admin:repo_hook',
+        scope: 'repo admin:repo_hook admin:org',
       },
       headers: {
         accept: 'application/json',
       },
     });
    
-    const webhookUrl = 'https://48f8-39-51-69-114.ngrok-free.app/webhook/github';
+    const webhookUrl = 'https://2cbd-39-57-193-98.ngrok-free.app/github/callback';
    const owner = 'muzammilgull123';
     const repo='muzammilGUll';
    
     
-    const access_token = response.data.access_token;
-      console.log(access_token);
+    const oauthToken = response.data.access_token;
+      console.log(oauthToken,"oauthToken");
+    // const persnalToken = await  createPersonalAccessToken(oauthToken);
+    // console.log("persnalToken",persnalToken)
    registerWebhook(owner,repo,webhookUrl)
   
 

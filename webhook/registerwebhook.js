@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-    registerWebhook: async (owner, repo, webhookUrl) => {
+    registerWebhook: async (owner, repo, webhookUrl,access_token) => {
         console.log(
             "owner", owner,
             "repo", repo,
@@ -19,7 +19,7 @@ module.exports = {
                 },
             }, {
                 headers: {
-                    Authorization: `token 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`,
+                    Authorization: `token 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`,
                     'X-GitHub-Api-Version': '2022-11-28'
                 },
             });
