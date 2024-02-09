@@ -1,7 +1,12 @@
 const axios = require('axios');
+const { getRepoInfo } = require('../api/controller');
+const { repoinfo } = require('./repoInfo');
 
 async function registerWebhook(owner, repo, webhookUrl, githubAppToken) {
+     const result = repoinfo
+     console.log("result",result);
     console.log(githubAppToken);
+    getRepoInfo.repo
     try {
         const response = await axios.post(`https://api.github.com/repos/${owner}/${repo}/hooks`, {
             name: 'web',

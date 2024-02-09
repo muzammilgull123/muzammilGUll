@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 const { registerWebhook } = require('./webhook/registerwebhook');
 // const { getPersnalAccessToken } = require('./webhook/persnalAccessToken');
 const {createPersonalAccessToken} = require('./webhook/persnalAccessToken');
+const pool = require('./dbconfig');
+const router = require('./api/router');
+const { storeGithHubTokeninfo } = require('./api/controller');
 
 
 
@@ -13,6 +16,20 @@ dotenv.config();
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
+try {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error connecting to database:', err);
+      process.exit(1); 
+    }
+    console.log('Connected to the database!');
+    connection.release(); 
+  });
+} catch (error) {
+  console.error('Error connecting to database:', error);
+  process.exit(1); // Exit the process with an error code
+}
+
 
 app.get('/', (req, res) => {
   res.send('Hello, this is your server!');
@@ -42,13 +59,24 @@ app.get('/github/callback', async (req, res) => {
     });
    
     const webhookUrl = 'https://05a9-39-34-139-137.ngrok-free.app/webhook/github';
+    
    const owner = 'muzammilgull123';
     const repo='muzammilGUll';
    
     
     const oauthToken = response.data.access_token;
       console.log(oauthToken,"oauthToken");
-    
+      const userResponse = await axios.get('https://api.github.com/user', {
+        headers: {
+          Authorization: `token ${oauthToken}`,
+        },
+        
+      });
+     const userName= userResponse.data.login;
+     const userid = userResponse.data.id;
+     storeGithHubTokeninfo(userName,userid,oauthToken);
+
+
       // const persnalToken= await createPersonalAccessToken(oauthToken);
       // console.log("persnalToken",persnalToken);
 
@@ -72,5 +100,6 @@ app.post('/webhook/github', (req, res) => {
 
   res.send('GitHub webhook received!');
 });
+app.use('/user', router);
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
