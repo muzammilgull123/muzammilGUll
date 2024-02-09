@@ -98,8 +98,8 @@ app.post('/webhook/github', async (req, res) => {
   const repofullname=req.body.repository.full_name;
   const ssh_url=req.body.repository.ssh_url;
   const pushed_at=req.body.repository.pushed_at;
-  const senderName = req.sender.login;
-  const senderid = req.sender.id;
+  // const senderName = req.sender.login;
+  // const senderid = req.sender.id;
 
   await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid)
   
