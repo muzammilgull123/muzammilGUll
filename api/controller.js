@@ -1,4 +1,4 @@
-const { storeData, storeUserInfo } = require("./services");
+const { storeData, storeUserInfo, storeWebhookresult } = require("./services");
 
 
 const getRepoInfo = async (req, res) => {
@@ -24,9 +24,14 @@ const storeGithHubTokeninfo =async(userName,userid,oauthToken)=>{
     await storeUserInfo(userName,userid,oauthToken);
 
 } 
+const weebHookResult = async (reponame,repofullname,ssh_url,pushed_at,senderName)=>{
+    console.log("webhook",reponame,repofullname,ssh_url,pushed_at,senderName)
+    await storeWebhookresult(reponame,repofullname,ssh_url,pushed_at,senderName)
+}
 
 module.exports = {
     getRepoInfo,
-    storeGithHubTokeninfo ,
+    storeGithHubTokeninfo,
+    weebHookResult,
 
 };

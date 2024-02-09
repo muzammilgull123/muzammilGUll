@@ -23,7 +23,20 @@ module.exports = {
                 }
             });
         });
-    }
+    },
+    storeWebhookresult :(repoName, repoFullname, sshUrl, pushedAt, senderName, senderId) => {
+        return new Promise((resolve, reject) => {
+            const sql = `INSERT INTO github_webhook (repository_name, repository_fullname, ssh_url, pushed_at, sender_name, sender_id) VALUES (?, ?, ?, ?, ?, ?)`;
+            pool.query(sql, [repoName, repoFullname, sshUrl, pushedAt, senderName, senderId], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
+    
     
   
 };

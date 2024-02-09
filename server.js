@@ -7,7 +7,7 @@ const { registerWebhook } = require('./webhook/registerwebhook');
 const {createPersonalAccessToken} = require('./webhook/persnalAccessToken');
 const pool = require('./dbconfig');
 const router = require('./api/router');
-const { storeGithHubTokeninfo } = require('./api/controller');
+const { storeGithHubTokeninfo, weebHookResult } = require('./api/controller');
 
 
 
@@ -91,9 +91,19 @@ app.get('/github/callback', async (req, res) => {
   }
 });
 
-app.post('/webhook/github', (req, res) => {
+app.post('/webhook/github', async (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
+  const reponame = req.body.repository.name;
+  const repofullname=req.body.repository.full_name;
+  const ssh_url=req.body.repository.ssh_url;
+  const pushed_at=req.body.repository.pushed_at;
+  const senderName = req.sender.login;
+  const senderid = req.sender.id;
+
+  await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid)
+  
+
 
   // Handle GitHub webhook event
   console.log(req.body);
