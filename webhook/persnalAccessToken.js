@@ -27,4 +27,4 @@ async function createPersonalAccessToken(oauthAppToken) {
 }
 
 // Export the function
-module.exports = createPersonalAccessToken;
+module.exports = {createPersonalAccessToken};

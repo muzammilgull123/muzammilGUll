@@ -3,8 +3,8 @@ const app = express();
 const axios = require('axios');
 const dotenv = require('dotenv');
 const { registerWebhook } = require('./webhook/registerwebhook');
-const { getPersnalAccessToken } = require('./webhook/persnalAccessToken');
-const createPersonalAccessToken = require('./webhook/persnalAccessToken');
+// const { getPersnalAccessToken } = require('./webhook/persnalAccessToken');
+const {createPersonalAccessToken} = require('./webhook/persnalAccessToken');
 
 
 
@@ -20,36 +20,39 @@ app.get('/', (req, res) => {
 
 app.get('/login/github',(req, res) => {
   const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`;
-
+  // const redirectUrl2 ="http://localhost:3001/thankyou?thankyou"
   res.redirect(redirectUrl);
+ 
 });
 
 app.get('/github/callback', async (req, res) => {
   const code = req.query.code;
 
   try {
-    const response = await axios.post('https://github.com/login/oauth/access_token', null, {
+    const response = await axios.post('https://github.com/login/oauth/access_token',null,{
       params: {
         client_id: process.env.GITHUB_APP_CLIENT_ID,
         client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
         code: code,
-        scope: 'repo admin:repo_hook admin:org',
+        // scope: 'repo admin:repo_hook admin:org',
       },
       headers: {
         accept: 'application/json',
       },
     });
    
-    const webhookUrl = 'https://2cbd-39-57-193-98.ngrok-free.app/github/callback';
+    const webhookUrl = 'https://05a9-39-34-139-137.ngrok-free.app/webhook/github';
    const owner = 'muzammilgull123';
     const repo='muzammilGUll';
    
     
     const oauthToken = response.data.access_token;
       console.log(oauthToken,"oauthToken");
-    // const persnalToken = await  createPersonalAccessToken(oauthToken);
-    // console.log("persnalToken",persnalToken)
-   registerWebhook(owner,repo,webhookUrl)
+    
+      // const persnalToken= await createPersonalAccessToken(oauthToken);
+      // console.log("persnalToken",persnalToken);
+
+      await registerWebhook(owner, repo, webhookUrl, oauthToken);
   
 
     res.send('GitHub authentication successful!');
