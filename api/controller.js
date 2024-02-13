@@ -28,10 +28,17 @@ const weebHookResult = async (reponame,repofullname,ssh_url,pushed_at,senderName
     console.log("webhook",reponame,repofullname,ssh_url,pushed_at,senderName)
     await storeWebhookresult(reponame,repofullname,ssh_url,pushed_at,senderName)
 }
+const getRepodETail = async (req,res)=>{
+   const{repoName,repoOwner}=req.body;
+   console.log("req.body",req.body)
+   await getRepoNameRepoWnername(repoOwner,repoName);   
+}
 
 module.exports = {
     getRepoInfo,
     storeGithHubTokeninfo,
     weebHookResult,
+    getRepodETail,
+ 
 
 };

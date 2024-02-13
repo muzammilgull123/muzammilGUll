@@ -36,8 +36,70 @@ module.exports = {
             });
         });
     },
-    
-    
-  
+     getTokenByValue : (tokenValue) => {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT * FROM github_token WHERE token = ?`;
+            pool.query(sql, [tokenValue], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
+    getUserIdByToken : (tokenValue) => {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT id as 'user_id' FROM github_token WHERE token = ?`;
+            pool.query(sql, [tokenValue], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
+    // getRepoNameRepoWnername: (repoOwner,repoName,id) => {
+        
+    //     return new Promise((resolve, reject) => {
+    //         const sql = `INSERT INTO github_token () VALUES (?, ?, ?)`;
+    //         pool.query(sql, [repoName,repoOwner,id], (error, results) => {
+    //             if (error) {
+    //                 reject(error);
+    //             } else {
+    //                 resolve(results);
+    //             }
+    //         });
+    //     });
+    // },
+checkUserAlreadyLogen:(tokenValue) => {
+    console.log(`SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = `+tokenValue)
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = ?`;
+        pool.query(sql, [tokenValue], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+},
+
+gitAlert: (repoOwner,repoName,id) => {
+        
+    return new Promise((resolve, reject) => {
+        const sql = `INSERT INTO git_alerts () VALUES (?, ?, ?)`;
+        pool.query(sql, [], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+},
+
 };
 

@@ -1,8 +1,10 @@
 const express = require('express');
-const { getRepoInfo } = require('./controller');
+const { getRepoInfo, getRepodETail } = require('./controller');
+
 const router = express.Router();
 
-router.post('/users',getRepoInfo);
+// router.post('/users',getRepoInfo);
+// router.post('/webhookdetail',getRepodETail);
 
 
 
