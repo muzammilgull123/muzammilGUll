@@ -24,9 +24,9 @@ const storeGithHubTokeninfo =async(userName,userid,oauthToken)=>{
     await storeUserInfo(userName,userid,oauthToken);
 
 } 
-const weebHookResult = async (reponame,repofullname,ssh_url,pushed_at,senderName,token_id)=>{
+const weebHookResult = async (reponame,repofullname,ssh_url,pushed_at,senderName,senderId,token_id,repoOwner)=>{
     console.log("webhook",reponame,repofullname,ssh_url,pushed_at,senderName,token_id)
-    await storeWebhookresult(reponame,repofullname,ssh_url,pushed_at,senderName,token_id);
+    await storeWebhookresult(reponame,repofullname,ssh_url,pushed_at,senderName,senderId,token_id,repoOwner);
 }
 const getRepodETail = async (req,res)=>{
    const{repoName,repoOwner}=req.body;

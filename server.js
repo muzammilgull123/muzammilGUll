@@ -145,16 +145,19 @@ app.post('/webhook/github', async (req, res) => {
    
   // const reponame = jsonObject.repository.name;
   const repofullname = req.body.repository.full_name;
-  const ssh_url = req.body.repository.ssh_url;
-  const pushed_at = req.body.check_suite.head_commit.timestamp;
-  const senderName = req.body.sender.login;
-  const user_id = jreq.body.sender.id;
+  const reponame = req.body.repository.name;
+  const repoOwner = req.body.repository.owner.login;
+const ssh_url = req.body.repository.ssh_url;
+const pushed_at = req.body.check_suite.head_commit.timestamp;
+const senderName = req.body.sender.login;
+const senderId = req.body.sender.id;
+const user_id = req.body.repository.owner.id;
 
 
 const githubTokenId = await getIdByUserID(user_id);
 console.log("getIdByUserID[0].id",githubTokenId [0].id)
   
-await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,githubTokenId[0].id);
+await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderId,githubTokenId[0].id,repoOwner);
   
   const value = await jsonStringify(payload);
    
