@@ -2,13 +2,13 @@ const axios = require('axios');
 const { getRepoInfo } = require('../api/controller');
 const { repoinfo } = require('./repoInfo');
 
-async function registerWebhook(owner, repo, webhookUrl, githubAppToken) {
-     const result = repoinfo
-     console.log("result",result);
-    console.log(githubAppToken);
-    getRepoInfo.repo
-    try {
-        const response = await axios.post(`https://api.github.com/repos/${owner}/${repo}/hooks`, {
+async function registerWebhook(owner, repo, webhookUrl, token) {
+   console.log("registerWebhook",token);
+   console.log("owner",owner);
+   console.log("repo",repo);
+   console.log("webHookUrl",webhookUrl)
+ try {
+        const response = await axios.post(`https://api.github.com/repos/${owner}/${repo}/hooks`,{
             name: 'web',
             active: true,
             events: ['push'],
@@ -19,8 +19,10 @@ async function registerWebhook(owner, repo, webhookUrl, githubAppToken) {
             },
         }, {
             headers: {
-                Authorization: `token ${githubAppToken}`,
-                'X-GitHub-Api-Version': '2022-11-28'
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'muzammilnewapp'
+                
             }
         });
 

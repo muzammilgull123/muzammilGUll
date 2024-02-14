@@ -4,11 +4,11 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const { registerWebhook } = require('./webhook/registerwebhook');
 // const { getPersnalAccessToken } = require('./webhook/persnalAccessToken');
-const {createPersonalAccessToken} = require('./webhook/persnalAccessToken');
+// const {createPersonalAccessToken} = require('./webhook/persnalAccessToken');
 const pool = require('./dbconfig');
 const router = require('./api/router');
 const { storeGithHubTokeninfo, weebHookResult } = require('./api/controller');
-const { getUserIdByToken, checkUserAlreadyLogen, getRepoNameRepoWnername } = require('./api/services');
+const { getUserIdByToken, checkUserAlreadyLogen} = require('./api/services');
 const { useNavigate } = require('react-router-dom');
 const cors = require('cors');
 
@@ -53,7 +53,7 @@ app.get('/github/callback', async (req, res) => {
         client_id: process.env.GITHUB_APP_CLIENT_ID,
         client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
         code: code,
-         scope: 'repo admin:repo_hook admin:org',
+         scope: 'admin:org',
       },
       headers: {
         accept: 'application/json',
@@ -69,7 +69,7 @@ app.get('/github/callback', async (req, res) => {
    
     
     const oauthToken = response.data.access_token;
-      console.log(oauthToken,"oauthToken");
+      console.log("oauthToken from login",oauthToken);
       const userResponse = await axios.get('https://api.github.com/user', {
         headers: {
           Authorization: `token ${oauthToken}`,
@@ -115,15 +115,16 @@ app.get('/github/callback', async (req, res) => {
 app.post('/webhookdetail', async(req,res)=>{
   try {
     
-    const { repoName, repoOwner,token }= req.body;
+    const {repoName, repoOwner,token }= req.body;
+    
       const owner = repoOwner;
       const repo = repoName;
       console.log("token from register api",token)
       console.log("owner", "repo", owner, repo);
      
-      const webhookUrl ='https://a445-39-51-66-18.ngrok-free.app/webhook/github';
-      const result = await registerWebhook(owner, repo, webhookUrl, token );
-      const user_id = await getUserIdByToken( token);
+      const webhookUrl ='https://9749-39-51-66-164.ngrok-free.app/webhook/github';
+      const result = await registerWebhook(owner, repo, webhookUrl,token);
+      const user_id = await getUserIdByToken(token);
       res.status(200).json={
       data:result,
       }
@@ -137,17 +138,17 @@ app.post('/webhookdetail', async(req,res)=>{
 app.post('/webhook/github', async (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
-  const reponame = req.body.repository.name;
-  const repofullname=req.body.repository.full_name;
-  const ssh_url=req.body.repository.ssh_url;
-  const pushed_at=req.body.repository.pushed_at;
+  // const reponame = req.body.repository.name;
+  // const repofullname=req.body.repository.full_name;
+  // const ssh_url=req.body.repository.ssh_url;
+  // const pushed_at=req.body.repository.pushed_at;
   // const senderName = req.body.repository.sender.login;
-  const senderid =  req.body.repository.sender.id;
+  // const senderid =  req.body.repository.sender.id;
   
 
  
 
-    await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
+    // await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
   
 
   
