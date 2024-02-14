@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { getRepoInfo } = require('../api/controller');
-const { repoinfo } = require('./repoInfo');
+
+
 
 async function registerWebhook(owner, repo, webhookUrl, token) {
    console.log("registerWebhook",token);

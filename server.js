@@ -8,9 +8,10 @@ const { registerWebhook } = require('./webhook/registerwebhook');
 const pool = require('./dbconfig');
 const router = require('./api/router');
 const { storeGithHubTokeninfo, weebHookResult } = require('./api/controller');
-const { getUserIdByToken, checkUserAlreadyLogen} = require('./api/services');
+const { getUserIdByToken, checkUserAlreadyLogen, getIdByUserID, gitAlert} = require('./api/services');
 const { useNavigate } = require('react-router-dom');
 const cors = require('cors');
+const jsonStringify = require('./helpers/inputJson');
 
 
 dotenv.config();
@@ -38,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login/github',(req, res) => {
-  const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`;
+  const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}&scope=repo%20admin:org`;
 
   res.redirect(redirectUrl);
  
@@ -53,7 +54,7 @@ app.get('/github/callback', async (req, res) => {
         client_id: process.env.GITHUB_APP_CLIENT_ID,
         client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
         code: code,
-         scope: 'admin:org',
+        
       },
       headers: {
         accept: 'application/json',
@@ -123,8 +124,11 @@ app.post('/webhookdetail', async(req,res)=>{
       console.log("owner", "repo", owner, repo);
      
       const webhookUrl ='https://9749-39-51-66-164.ngrok-free.app/webhook/github';
-      const result = await registerWebhook(owner, repo, webhookUrl,token);
-      const user_id = await getUserIdByToken(token);
+      // const result = await registerWebhook(owner, repo, webhookUrl,token);
+      // const userDetail = await getUserIdByToken(token);
+      // console.log("useerDetail",userDetail);
+      // const {id,user_id}=userDetail[0]
+      // await gitAlert(id,user_id)
       res.status(200).json={
       data:result,
       }
@@ -138,17 +142,27 @@ app.post('/webhookdetail', async(req,res)=>{
 app.post('/webhook/github', async (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
+   
   // const reponame = req.body.repository.name;
   // const repofullname=req.body.repository.full_name;
   // const ssh_url=req.body.repository.ssh_url;
   // const pushed_at=req.body.repository.pushed_at;
   // const senderName = req.body.repository.sender.login;
   // const senderid =  req.body.repository.sender.id;
-  
+    
 
+
+const githubTokenId = await getIdByUserID(user_id);
+  
+// await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
+  
+  const value = await jsonStringify(value);
+   
+  console.log("inputJsonResult ",value);
+  gitAlert(id,user_id,value)
  
 
-    // await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
+    
   
 
   

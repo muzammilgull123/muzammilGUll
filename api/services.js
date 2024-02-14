@@ -50,7 +50,7 @@ module.exports = {
     },
     getUserIdByToken : (tokenValue) => {
         return new Promise((resolve, reject) => {
-            const sql = `SELECT id as 'user_id' FROM github_token WHERE token = ?`;
+            const sql = `SELECT id,user_id as 'id','user_id' FROM github_token WHERE token = ?`;
             pool.query(sql, [tokenValue], (error, results) => {
                 if (error) {
                     reject(error);
@@ -87,10 +87,22 @@ checkUserAlreadyLogen:(tokenValue) => {
     });
 },
 
-gitAlert: (repoOwner,repoName,id) => {
+gitAlert: (id,user_id,value) => {
         
     return new Promise((resolve, reject) => {
-        const sql = `INSERT INTO git_alerts () VALUES (?, ?, ?)`;
+        const sql = `INSERT INTO git_alerts (github_id,user_id,value) VALUES (?, ?, ?)`;
+        pool.query(sql, [id,user_id,value], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+},
+getIdByUserID: (user_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT id FROM github_token WHERE user_id = ? `;
         pool.query(sql, [], (error, results) => {
             if (error) {
                 reject(error);
