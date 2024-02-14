@@ -167,7 +167,7 @@ await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderId
   const value = await jsonStringify(payload);
    
   // console.log("inputJsonResult ",value);
-  gitAlert(githubTokenId[0].id,user_id,value)
+  await gitAlert(githubTokenId[0].id,user_id,value)
  
 
     

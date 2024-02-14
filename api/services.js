@@ -103,7 +103,7 @@ gitAlert: (id,user_id,value) => {
 getIdByUserID: (user_id) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT id FROM github_token WHERE user_id = ? `;
-        pool.query(sql, [], (error, results) => {
+        pool.query(sql, [user_id], (error, results) => {
             if (error) {
                 reject(error);
             } else {
