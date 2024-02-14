@@ -24,10 +24,10 @@ module.exports = {
             });
         });
     },
-    storeWebhookresult :(reponame,repofullname,ssh_url,pushed_at,senderName,senderId,token_id,repoOwner) => {
+    storeWebhookresult :(reponame,repofullname,ssh_url,senderName,senderId,token_id,repoOwner) => {
         return new Promise((resolve, reject) => {
-            const sql = `INSERT INTO github_webhook (repository_name, repository_fullname, ssh_url, pushed_at, sender_name,sender_id,github_token_id,repo_owners) VALUES (?, ?, ?, ?, ?, ?,?,?)`;
-            pool.query(sql, [reponame,repofullname,ssh_url,pushed_at,senderName,senderId,token_id,repoOwner], (error, results) => {
+            const sql = `INSERT INTO github_webhook (repository_name, repository_fullname, ssh_url,sender_name,sender_id,github_token_id,repo_owners) VALUES (?, ?, ?, ?, ?, ?,?)`;
+            pool.query(sql, [reponame,repofullname,ssh_url,senderName,senderId,token_id,repoOwner], (error, results) => {
                 if (error) {
                     reject(error);
                 } else {
