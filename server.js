@@ -94,15 +94,7 @@ app.get('/github/callback', async (req, res) => {
     else{
       storeGithHubTokeninfo(userName,userid,oauthToken);
       res.redirect(`http://localhost:3001/thankyou/${oauthToken}/${userName}/${userid}`);
-
-    //  console.log("owner,repo",repo,owner)
-    //   res.json({
-    //     data :repo,owner
-    //   })
-    //   await gitAlert(user_id[0].user_id);
-    //   console.log("auth",oauthToken);
-    //   await registerWebhook(owner, repo, webhookUrl, oauthToken);
-      }
+  }
 
       
     
@@ -147,12 +139,12 @@ app.post('/webhook/github', async (req, res) => {
  
   
   // console.log("ending of request.ody");
-  // const reponame = jsonObject.repository.name;
+ 
   const repofullname = req.body.repository.full_name;
   const reponame = req.body.repository.name;
   const repoOwner = req.body.repository.owner.login;
 const ssh_url = req.body.repository.ssh_url;
-// const pushed_at = req.body.head_commit.timestamp;
+
 const senderName = req.body.sender.login;
 const senderId = req.body.sender.id;
 const user_id = req.body.repository.owner.id;
