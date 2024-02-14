@@ -143,12 +143,12 @@ app.post('/webhook/github', async (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
    
-  const reponame = jsonObject.repository.name;
-  const repofullname = jsonObject.repository.full_name;
-  const ssh_url = jsonObject.repository.ssh_url;
-  const pushed_at = jsonObject.check_suite.head_commit.timestamp;
-  const senderName = jsonObject.sender.login;
-  const user_id = jsonObject.sender.id;
+  // const reponame = jsonObject.repository.name;
+  const repofullname = req.body.repository.full_name;
+  const ssh_url = req.body.repository.ssh_url;
+  const pushed_at = req.body.check_suite.head_commit.timestamp;
+  const senderName = req.body.sender.login;
+  const user_id = jreq.body.sender.id;
 
 
 const githubTokenId = await getIdByUserID(user_id);
