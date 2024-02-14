@@ -160,7 +160,7 @@ const user_id = req.body.repository.owner.id;
  
 const githubTokenId = await getIdByUserID(user_id);
 
-console.log("getIdByUserID[0].id",githubTokenId [0].id)
+console.log("getIdByUserID[0].id",githubTokenId)
   
 await weebHookResult(reponame,repofullname,ssh_url,senderName,senderId,githubTokenId[0].id,repoOwner);
   
