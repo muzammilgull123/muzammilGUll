@@ -152,14 +152,14 @@ app.post('/webhook/github', async (req, res) => {
     
 
 
-const githubTokenId = await getIdByUserID(user_id);
+// const githubTokenId = await getIdByUserID(user_id);
   
 // await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
   
-  const value = await jsonStringify(value);
+  const value = await jsonStringify(payload);
    
   console.log("inputJsonResult ",value);
-  gitAlert(id,user_id,value)
+  // gitAlert(id,user_id,value)
  
 
     
