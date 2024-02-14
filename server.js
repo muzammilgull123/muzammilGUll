@@ -143,23 +143,23 @@ app.post('/webhook/github', async (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
    
-  // const reponame = req.body.repository.name;
-  // const repofullname=req.body.repository.full_name;
-  // const ssh_url=req.body.repository.ssh_url;
-  // const pushed_at=req.body.repository.pushed_at;
-  // const senderName = req.body.repository.sender.login;
-  // const senderid =  req.body.repository.sender.id;
-    
+  const reponame = jsonObject.repository.name;
+  const repofullname = jsonObject.repository.full_name;
+  const ssh_url = jsonObject.repository.ssh_url;
+  const pushed_at = jsonObject.check_suite.head_commit.timestamp;
+  const senderName = jsonObject.sender.login;
+  const user_id = jsonObject.sender.id;
 
 
-// const githubTokenId = await getIdByUserID(user_id);
+const githubTokenId = await getIdByUserID(user_id);
+console.log("getIdByUserID[0].id",githubTokenId [0].id)
   
-// await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,senderid);
+await weebHookResult(reponame,repofullname,ssh_url,pushed_at,senderName,githubTokenId[0].id);
   
   const value = await jsonStringify(payload);
    
-  console.log("inputJsonResult ",value);
-  // gitAlert(id,user_id,value)
+  // console.log("inputJsonResult ",value);
+  gitAlert(githubTokenId[0].id,user_id,value)
  
 
     
@@ -171,7 +171,7 @@ app.post('/webhook/github', async (req, res) => {
 
 
   // Handle GitHub webhook event
-  console.log(req.body);
+  // console.log(req.body);
 
   res.send('GitHub webhook received!');
 });
