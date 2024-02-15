@@ -12,7 +12,7 @@ module.exports = {
             });
         });
     },
-    storeUserInfo :(userName, userId, oauthToken) => {
+    storeUserInfo: (userName, userId, oauthToken) => {
         return new Promise((resolve, reject) => {
             const sql = `INSERT INTO github_token (username, user_id, token) VALUES (?, ?, ?)`;
             pool.query(sql, [userName, userId, oauthToken], (error, results) => {
@@ -24,10 +24,10 @@ module.exports = {
             });
         });
     },
-    storeWebhookresult :(reponame,repofullname,ssh_url,senderName,senderId,token_id,repoOwner) => {
+    storeWebhookresult: (reponame, repofullname, ssh_url, senderName, senderId, token_id, repoOwner) => {
         return new Promise((resolve, reject) => {
             const sql = `INSERT INTO github_webhook (repository_name, repository_fullname, ssh_url,sender_name,sender_id,github_token_id,repo_owners) VALUES (?, ?, ?, ?, ?, ?,?)`;
-            pool.query(sql, [reponame,repofullname,ssh_url,senderName,senderId,token_id,repoOwner], (error, results) => {
+            pool.query(sql, [reponame, repofullname, ssh_url, senderName, senderId, token_id, repoOwner], (error, results) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -36,7 +36,7 @@ module.exports = {
             });
         });
     },
-     getTokenByValue : (tokenValue) => {
+    getTokenByValue: (tokenValue) => {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM github_token WHERE token = ?`;
             pool.query(sql, [tokenValue], (error, results) => {
@@ -48,9 +48,9 @@ module.exports = {
             });
         });
     },
-    getUserIdByToken : (tokenValue) => {
+    getUserIdByToken: (tokenValue) => {
         return new Promise((resolve, reject) => {
-            const sql = `SELECT id,user_id as 'id','user_id' FROM github_token WHERE token = ?`;
+            const sql = `SELECT id as 'tokenId' FROM github_token WHERE token = ?`;
             pool.query(sql, [tokenValue], (error, results) => {
                 if (error) {
                     reject(error);
@@ -59,9 +59,10 @@ module.exports = {
                 }
             });
         });
+
     },
     // getRepoNameRepoWnername: (repoOwner,repoName,id) => {
-        
+
     //     return new Promise((resolve, reject) => {
     //         const sql = `INSERT INTO github_token () VALUES (?, ?, ?)`;
     //         pool.query(sql, [repoName,repoOwner,id], (error, results) => {
@@ -73,45 +74,66 @@ module.exports = {
     //         });
     //     });
     // },
-checkUserAlreadyLogen:(tokenValue) => {
-    console.log(`SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = `+tokenValue)
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = ?`;
-        pool.query(sql, [tokenValue], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
+    checkUserAlreadyLogen: (tokenValue) => {
+        // console.log(`SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = `+tokenValue)
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT COUNT(id) as 'token_count' FROM github_token WHERE token = ?`;
+            pool.query(sql, [tokenValue], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
         });
-    });
-},
+    },
 
-gitAlert: (id,user_id,value) => {
-        
-    return new Promise((resolve, reject) => {
-        const sql = `INSERT INTO git_alerts (github_id,user_id,value) VALUES (?, ?, ?)`;
-        pool.query(sql, [id,user_id,value], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
+    gitAlert: (id, user_id, value) => {
+
+        return new Promise((resolve, reject) => {
+            const sql = `INSERT INTO git_alerts (github_id,user_id,value) VALUES (?, ?, ?)`;
+            pool.query(sql, [id, user_id, value], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
         });
-    });
-},
-getIdByUserID: (user_id) => {
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT id FROM github_token WHERE user_id = ? `;
-        pool.query(sql, [user_id], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
-},
+    },
+
+    storeRegisterWebhook: async (webhookType, webhookId, webhookName, webhookActive, webhookCreatedAt, webhookEvents, webhookUpdatedAt, webhookTestUrl, webhookPingUrl, webhookDeliveriesUrl, webhookLastResponseStatus,tokenId) => {
+        try {
+            const sql = `INSERT INTO webhook_registration 
+                     (associated_token_id, webhook_type, webhook_id, webhook_name, 
+                      webhook_active, webhook_events, webhook_created_at, 
+                      webhook_updated_at, webhook_test_url, webhook_ping_url, 
+                      webhook_deliveries_url, webhook_last_response_status) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+            const values = [
+                tokenId,
+                webhookType,
+                webhookId,
+                webhookName,
+                webhookActive,
+                webhookEvents.join(','),
+                webhookCreatedAt,
+                webhookUpdatedAt,
+                webhookTestUrl,
+                webhookPingUrl,
+                webhookDeliveriesUrl,
+                webhookLastResponseStatus
+            ];
+
+            const results = await pool.query(sql, values);
+            return results;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
 };
 
