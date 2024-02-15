@@ -131,7 +131,19 @@ module.exports = {
         } catch (error) {
             throw error;
         }
-    }
+    },
+    getIdByUserID: (user_id) => {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT id FROM github_token WHERE user_id = ?`;
+            pool.query(sql, [user_id], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
 
 
 
