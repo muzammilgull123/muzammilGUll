@@ -9,6 +9,8 @@ const { getUserIdByToken, checkUserAlreadyLogen, getIdByUserID, gitAlert } = req
 const { useNavigate } = require('react-router-dom');
 const cors = require('cors');
 const jsonStringify = require('./helpers/inputJson');
+const { formatDataToJSON } = require('./helpers/jsondata');
+const { sendSlackNotification } = require('./webhook/slacknotification');
 dotenv.config();
 app.use(express.json());
 app.use(cors());
@@ -73,7 +75,7 @@ app.get('/github/callback', async (req, res) => {
     }
     else {
       storeGithHubTokeninfo(userName, userid, oauthToken);
-      res.redirect(`http://localhost:3001/thankyou/${oauthToken}/${userName}/${userid}`);
+      res.redirect(`http://localhost:3002/thankyou/${oauthToken}/${userName}/${userid}`);
     }
 
 
@@ -99,7 +101,7 @@ app.post('/webhookdetail', async (req, res) => {
     const {tokenId}=associateId
     const webhookUrl = 'https://767d-39-51-64-111.ngrok-free.app/webhook/github';
     const result = await registerWebhook(owner, repo, webhookUrl, token,tokenId);
- 
+      
     res.status(200).json = {
       data: result,
     }
@@ -123,12 +125,13 @@ app.post('/webhook/github', async (req, res) => {
 
 
   const githubTokenId = await getIdByUserID(user_id);
-
+  const jsonData = formatDataToJSON(repofullname, reponame, repoOwner, ssh_url, senderName, senderId, user_id);
+   await sendSlackNotification(jsonData);
   console.log("getIdByUserID[0].id", githubTokenId)
-
   await weebHookResult(reponame, repofullname, ssh_url, senderName, senderId, githubTokenId[0].id, repoOwner);
   const value = await jsonStringify(payload);
   await gitAlert(githubTokenId[0].id, user_id, value)
+
   res.send('GitHub webhook received!');
 });
 app.use('/user', router);

@@ -5,7 +5,7 @@ async function registerWebhook(owner, repo, webhookUrl, token,tokenId) {
    console.log("owner",owner);
    console.log("repo",repo);
    console.log("webHookUrl",webhookUrl)
-   console.log("token_id",token_id)
+   console.log("token_id",tokenId)
  try {
         const response = await axios.post(`https://api.github.com/repos/${owner}/${repo}/hooks`,{
             name: 'web',
