@@ -3,8 +3,8 @@ const { getRepoInfo, getRepodETail } = require('./controller');
 
 const router = express.Router();
 
-// router.post('/users',getRepoInfo);
-// router.post('/webhookdetail',getRepodETail);
+router.post('/users',getRepoInfo);
+router.post('/webhookdetail',getRepodETail);
 
 
 
