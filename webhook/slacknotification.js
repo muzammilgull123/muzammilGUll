@@ -1,18 +1,22 @@
 const axios = require('axios');
+const slack = require("@slack/bolt")
+const dotenv = require('dotenv');
+dotenv.config()
 
 async function sendSlackNotification(message) {
-    const webhookUrl ='https://hooks.slack.com/services/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';
-    try {
-        const response = await axios.post(webhookUrl, {
-            text: message
-        });
-        console.log('Slack notification sent:', response.data);
-    } catch (error) {
-        console.error('Error sending Slack notification:', error.message);
-    }
-}
+    const app =new slack.App({
+        signingSecret:process.env.SLACK_SIGNING_SECRET,
+        token:process.env.SLACK_BOT_TOKEN,
+    })
+    await app.client.chat.postMessage({
+        token:process.env.SLACK_BOT_TOKEN,
+        channel:process.env.SLACK_CHANEL,
+        text:message, 
+    })
+  
+} 
 
-// https://hooks.slack.com/services/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
+
 module.exports = { 
     sendSlackNotification
 };
