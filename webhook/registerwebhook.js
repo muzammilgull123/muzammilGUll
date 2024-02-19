@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { storeRegisterWebhook } = require('../api/services');
+// const { storeRegisterWebhook } = require('../api/services');
 async function registerWebhook(owner, repo, webhookUrl, token,tokenId) {
    console.log("registerWebhook",token);
    console.log("owner",owner);
@@ -27,19 +27,19 @@ async function registerWebhook(owner, repo, webhookUrl, token,tokenId) {
 
 console.log('Webhook registered successfully:', response.data);
        
-const webhookData = response.data;
-const webhookType = webhookData.type;
-const webhookId = webhookData.id;
-const webhookName = webhookData.name;
-const webhookActive = webhookData.active;
-const webhookEvents = webhookData.events.join(','); 
-const webhookCreatedAt = new Date(webhookData.created_at);
-const webhookUpdatedAt = new Date(webhookData.updated_at);
-const webhookTestUrl = webhookData.test_url;
-const webhookPingUrl = webhookData.ping_url;
-const webhookDeliveriesUrl = webhookData.deliveries_url;
-const webhookLastResponseStatus = webhookData.last_response.status;
-await storeRegisterWebhook(webhookType,webhookId,webhookName,webhookActive,webhookCreatedAt,webhookEvents,webhookUpdatedAt,webhookTestUrl,webhookPingUrl,webhookDeliveriesUrl,webhookLastResponseStatus,tokenId);
+// const webhookData = response.data;
+// const webhookType = webhookData.type;
+// const webhookId = webhookData.id;
+// const webhookName = webhookData.name;
+// const webhookActive = webhookData.active;
+// const webhookEvents = webhookData.events.join(','); 
+// const webhookCreatedAt = new Date(webhookData.created_at);
+// const webhookUpdatedAt = new Date(webhookData.updated_at);
+// const webhookTestUrl = webhookData.test_url;
+// const webhookPingUrl = webhookData.ping_url;
+// const webhookDeliveriesUrl = webhookData.deliveries_url;
+// const webhookLastResponseStatus = webhookData.last_response.status;
+// await storeRegisterWebhook(webhookType,webhookId,webhookName,webhookActive,webhookCreatedAt,webhookEvents,webhookUpdatedAt,webhookTestUrl,webhookPingUrl,webhookDeliveriesUrl,webhookLastResponseStatus,tokenId);
 return response.data;
     } catch (error) {
         console.error('Error registering webhook:', error.message);

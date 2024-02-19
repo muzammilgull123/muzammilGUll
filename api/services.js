@@ -1,4 +1,4 @@
-const pool = require("../dbconfig");
+ const pool = require("../dbconfig");
 
 module.exports = {
     storeData: () => {
@@ -143,8 +143,34 @@ module.exports = {
                 }
             });
         });
+    },                    
+    registerWebhookresult: (repoName, repoOwner, token, userId, userName, chanelId, tokenId) => {
+        return new Promise((resolve, reject) => {
+            const sql = `INSERT INTO registerwebhook (repoName, repoOwner, token, userId, userName, chanelId, tokenid) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            pool.query(sql, [repoName, repoOwner, token, userId, userName, chanelId, tokenId], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+        
     },
-
+    
+    getChanelIdByUserId: (userId) => {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT chanelId FROM registerwebhook WHERE userId = ?`;
+            pool.query(sql, [userId], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    }
+    
 
 
 };

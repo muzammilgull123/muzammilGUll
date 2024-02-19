@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const { registerWebhook } = require('./webhook/registerwebhook');const pool = require('./dbconfig');
 const router = require('./api/router');
 const { storeGithHubTokeninfo, weebHookResult } = require('./api/controller');
-const { getUserIdByToken, checkUserAlreadyLogen, getIdByUserID, gitAlert } = require('./api/services');
+const { getUserIdByToken, checkUserAlreadyLogen, getIdByUserID, gitAlert, registerWebhookresult, getChanelIdByUserId } = require('./api/services');
 const { useNavigate } = require('react-router-dom');
 const cors = require('cors');
 const jsonStringify = require('./helpers/inputJson');
@@ -89,21 +89,25 @@ app.get('/github/callback', async (req, res) => {
 
 app.post('/webhookdetail', async (req, res) => {
   try {
-
-    const { repoName, repoOwner, token } = req.body;
-
+    const { repoName, repoOwner, token,userId,userName,chanelId } = req.body;
     const owner = repoOwner;
     const repo = repoName;
-    console.log("token from register api", token)
-    console.log("owner", "repo", owner, repo);
-    
+
+    console.log("req.body",req.body);
+
+
+    // console.log("token from register api", token)
+    // console.log("owner", "repo", owner, repo);
     const associateId =  getUserIdByToken(token);
     const {tokenId}=associateId
-    const webhookUrl = 'https://cf61-39-51-71-99.ngrok-free.app/webhook/github';
+    const webhookUrl = 'https://8690-39-57-198-228.ngrok-free.app/webhook/github';
     const result = await registerWebhook(owner, repo, webhookUrl, token,tokenId);
+
+    await registerWebhookresult(repoName, repoOwner, token,userId,userName,chanelId,tokenId)
       
     res.status(200).json = {
-      data: result,
+      // data: result,
+      data:req.body,
     }
   } catch (error) {
     console.error('Error in webhookdetail endpoint:', error);
@@ -122,11 +126,14 @@ app.post('/webhook/github', async (req, res) => {
   const senderName = req.body.sender.login;
   const senderId = req.body.sender.id;
   const user_id = req.body.repository.owner.id;
-
-
+  
+  const chanel = await  getChanelIdByUserId(user_id);
+  const {chanelId}=chanel;
   const githubTokenId = await getIdByUserID(user_id);
   const jsonData = formatDataToJSON(repofullname, reponame, repoOwner, ssh_url, senderName, senderId, user_id);
-   await sendSlackNotification(jsonData);
+  console.log(jsonData);
+   await sendSlackNotification(jsonData,chanelId);
+
   console.log("getIdByUserID[0].id", githubTokenId)
   await weebHookResult(reponame, repofullname, ssh_url, senderName, senderId, githubTokenId[0].id, repoOwner);
   const value = await jsonStringify(payload);
