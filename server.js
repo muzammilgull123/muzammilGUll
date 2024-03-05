@@ -11,6 +11,7 @@ const cors = require('cors');
 const jsonStringify = require('./helpers/inputJson');
 const { formatDataToJSON } = require('./helpers/jsondata');
 const { sendSlackNotification } = require('./webhook/slacknotification');
+const { sendtotestSlackNotification } = require('./webhook/secondworkspaceSlackNot');
 dotenv.config();
 app.use(express.json());
 app.use(cors());
@@ -133,6 +134,7 @@ app.post('/webhook/github', async (req, res) => {
   const jsonData = formatDataToJSON(repofullname, reponame, repoOwner, ssh_url, senderName, senderId, user_id);
   console.log(jsonData);
    await sendSlackNotification(jsonData,chanelId);
+   await sendtotestSlackNotification(jsonData);
 
   console.log("getIdByUserID[0].id", githubTokenId)
   await weebHookResult(reponame, repofullname, ssh_url, senderName, senderId, githubTokenId[0].id, repoOwner);
