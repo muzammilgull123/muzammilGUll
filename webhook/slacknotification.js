@@ -11,7 +11,7 @@ async function sendSlackNotification(message, channel) {
 
     await app.client.chat.postMessage({
         token: process.env.SLACK_BOT_TOKEN,
-        channel: "#muzammil", // Use the provided channel ID dynamically
+        channel: "#test", // Use the provided channel ID dynamically
         text: message,
     });
 }

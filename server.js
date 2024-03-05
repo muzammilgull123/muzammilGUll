@@ -139,7 +139,7 @@ app.post('/webhook/github', async (req, res) => {
   const value = await jsonStringify(payload);
   await gitAlert(githubTokenId[0].id, user_id, value)
 
-  res.send('GitHub webhook received!');
+  res.status(200).send('GitHub webhook received!');
 });
 app.use('/user', router);
 
