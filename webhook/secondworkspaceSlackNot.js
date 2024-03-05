@@ -11,7 +11,7 @@ async function sendtotestSlackNotification(message, channel) {
 
     await app.client.chat.postMessage({
         token: process.env.SLACK_BOT_TOKEN,
-        channel: "#test", // Use the provided channel ID dynamically
+        channel: "#general", // Use the provided channel ID dynamically
         text: message,
     });
 }
