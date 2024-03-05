@@ -100,7 +100,7 @@ app.post('/webhookdetail', async (req, res) => {
     // console.log("owner", "repo", owner, repo);
     const associateId =  getUserIdByToken(token);
     const {tokenId}=associateId
-    const webhookUrl = 'https://8690-39-57-198-228.ngrok-free.app/webhook/github';
+    const webhookUrl = ' https://9c9c-39-57-195-125.ngrok-free.app';
     const result = await registerWebhook(owner, repo, webhookUrl, token,tokenId);
 
     await registerWebhookresult(repoName, repoOwner, token,userId,userName,chanelId,tokenId)
